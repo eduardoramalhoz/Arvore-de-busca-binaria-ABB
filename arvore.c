@@ -9,7 +9,7 @@ typedef struct no {
 
 NoArv *criar() {
     NoArv *no;
-    no = malloc(sizeof(NoArv));//altera o conteúdo da raiz direto da main
+    no = malloc(sizeof(NoArv));//altera o conteudo da raiz direto da main
     no->valor = NULL;
     no->direita = NULL;
     no->esquerda = NULL;
@@ -20,7 +20,7 @@ NoArv *criar() {
 
 void inserir(NoArv **raiz, int num) {
     
-    if(*raiz == NULL) {//verificando se o conteudo do ponteiro é nulo
+    if(*raiz == NULL) {//verificando se o conteudo do ponteiro Ã© nulo
         *raiz = criar();
         (*raiz)->valor = num;
     }
@@ -32,7 +32,7 @@ void inserir(NoArv **raiz, int num) {
         }
     } 
     else {
-        printf("\n\tNo pode inserir numero repetido\n");
+        printf("\n\tNao pode inserir numero repetido\n");
     }
 }
 
@@ -56,6 +56,15 @@ void mostrar_v2 (NoArv *raiz) { //mostra arvore ordenada
     }
 }
 
+void esvaziar(NoArv **raiz) { //esvazia a arvore
+    if (*raiz != NULL) {
+        esvaziar(&((*raiz)->esquerda));
+        esvaziar(&((*raiz)->direita));
+        free(*raiz);
+        *raiz = NULL;
+    }
+}
+
 int main () {
 
     NoArv *busca, *raiz = NULL;
@@ -69,7 +78,7 @@ int main () {
             case 1:
                 printf("\n\tDigite um valor:");
                 scanf("%d",&valor);
-                inserir(&raiz, valor);//o & pega o endereço da variavel raiz, como a variavel raiz é um ponteiro, da certinho com o parametro **raiz
+                inserir(&raiz, valor);//o & pega o endereco da variavel raiz, como a variavel raiz Ã© um ponteiro, da certinho com o parametro **raiz
                 break;
             case 2:
                 printf("\n\tImpressao da arvore:\n");
@@ -83,9 +92,12 @@ int main () {
                 if(busca) {
                     printf("\n\tValor encontrado: %d\n", busca->valor);
                 } else {
-                    printf("\n\tValor no encontrado :/\n");
+                    printf("\n\tValor nao encontrado :/\n");
                 }
-
+                break;
+            case 4:
+                esvaziar(&raiz);
+                printf("\n\tArvore esvaziada!\n");
                 break;
             default:
                 if (opcao != 0) {
