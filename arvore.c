@@ -7,66 +7,45 @@ typedef struct no {
     struct no *direita, *esquerda;
 } NoArv;
 
-/*NoArv* inserir_v1 (NoArv *raiz, int num) { //versão mais custosa, pois tem o retorno de um nó toda vez que utilizada
-    if(raiz == NULL) {//verifica se o conteudo é nulo
-        NoArv *aux = malloc(sizeof(NoArv));
-        aux->valor = num;
-        aux->direita = NULL;
-        aux->esquerda = NULL;
-        return aux;
+NoArv *criar() {
+    NoArv *no;
+    no = malloc(sizeof(NoArv));//altera o conteúdo da raiz direto da main
+    no->valor = NULL;
+    no->direita = NULL;
+    no->esquerda = NULL;
 
-    } else {
-        if (num < raiz->valor) {
-            raiz->esquerda = inserir_v1(raiz->esquerda, num);
-            
-        } else {
-            raiz->direita = inserir_v1(raiz->direita, num);
-        } 
-        return raiz;
-    }
-}*/
+    return no;
+    
+}
 
 void inserir(NoArv **raiz, int num) {
+    
     if(*raiz == NULL) {//verificando se o conteudo do ponteiro é nulo
-        *raiz = malloc(sizeof(NoArv));//altera o conteúdo da raiz direto da main
+        *raiz = criar();
         (*raiz)->valor = num;
-        (*raiz)->direita = NULL;
-        (*raiz)->esquerda = NULL;
-
-    } else {
+    }
+    else if ((*raiz)->valor != num){
         if(num < (*raiz)->valor) {
-            inserir_v2(&((*raiz)->esquerda), num);
+            inserir(&((*raiz)->esquerda), num); 
         } else {
-            inserir_v2(&((*raiz)->direita), num);
+            inserir(&((*raiz)->direita), num);
         }
+    } 
+    else {
+        printf("\n\tNo pode inserir numero repetido\n");
     }
 }
 
-/*void inserir_v3 (NoArv **raiz, int num) {
-    NoArv *aux = *raiz;
-
-    while(aux) {
-        if(num < aux->valor) {
-            raiz = &aux->esquerda;
-        } else {
-            raiz = &aux->direita;
-        }
-        aux = *raiz;
-    }
-
-    aux = malloc(sizeof(NoArv));
-    aux->valor = num;
-    aux->direita = NULL;
-    aux->esquerda = NULL;
-    *raiz = aux;
-}*/
-
-void mostrar_v1 (NoArv *raiz) { // Mostra a arvore em ordem de insercao
+NoArv* buscar_v1(NoArv *raiz, int num) {
     if(raiz) {
-        printf("\t%d ", raiz->valor);
-        mostrar_v1(raiz->esquerda);
-        mostrar_v1(raiz->direita);
+        if (num == raiz->valor) 
+            return raiz;
+        else if(num < raiz->valor)
+            return buscar_v1(raiz->esquerda, num);
+        else
+            return buscar_v1(raiz->direita, num);
     }
+    return NULL;
 }
 
 void mostrar_v2 (NoArv *raiz) { //mostra arvore ordenada
@@ -79,28 +58,34 @@ void mostrar_v2 (NoArv *raiz) { //mostra arvore ordenada
 
 int main () {
 
-    NoArv *raiz = NULL;
+    NoArv *busca, *raiz = NULL;
     int opcao,valor;
 
     do {
-        printf("\n\t0 - Sair\n\t1 - Inserir\n\t2 - Imprimir\n");
+        printf("\n\t0 - Sair\n\t1 - Inserir\n\t2 - Imprimir\n\t3 - Buscar\n");
         scanf("%d", &opcao);
 
         switch(opcao) {
             case 1:
                 printf("\n\tDigite um valor:");
                 scanf("%d",&valor);
-                //raiz = inserir_v1(raiz,valor);
                 inserir(&raiz, valor);//o & pega o endereço da variavel raiz, como a variavel raiz é um ponteiro, da certinho com o parametro **raiz
-                //inserir_v3(&raiz, valor);
                 break;
             case 2:
-                printf("\n\tPrimeira impressao:\n");
-                mostrar_v1(raiz);
-                printf("\n");
-
-                printf("\n\tSegunda impressao:\n");
+                printf("\n\tImpressao da arvore:\n");
                 mostrar_v2(raiz);
+                break;
+            case 3:
+                printf("\n\tDigite um valor a ser pesquisado:");
+                scanf("%d", &valor);
+                busca = buscar_v1(raiz, valor);
+                         
+                if(busca) {
+                    printf("\n\tValor encontrado: %d\n", busca->valor);
+                } else {
+                    printf("\n\tValor no encontrado :/\n");
+                }
+
                 break;
             default:
                 if (opcao != 0) {
@@ -108,8 +93,6 @@ int main () {
                 }
         }
     } while (opcao != 0);
-
-    raiz = inserir_v1(raiz, 50);
 
     return 0;
 }
